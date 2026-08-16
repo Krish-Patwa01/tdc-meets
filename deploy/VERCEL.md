@@ -1,16 +1,21 @@
 # Deploy: frontend on Vercel, backend on Render
 
-Vercel sirf frontend chala sakta hai. Backend Vercel pe nahi ja sakta kyunki usme Socket.io hai, jo ek khuli connection maangta hai, aur Vercel ke serverless functions request khatam hote hi band ho jaate hain. Chat aur raise hand kaam nahi karenge.
+Frontend Vercel pe, backend Render pe. Dono free hain.
 
-Isliye backend Render pe jayega. Dono free hain.
+Vercel apne functions mein WebSockets support karta hai, toh import karte waqt woh backend ko bhi ek service ke roop mein detect kar lega. Us option ko chhod dena, do wajah se:
+
+1. Hobby plan pe connection function ki max duration tak hi tikti hai, jo 300 second hai. Ghante bhar ke workshop mein har paanch minute pe sabka reconnect hoga.
+2. Vercel kai instances chalata hai aur har user kisi bhi instance pe ja sakta hai. Humara chat `io.to(room).emit()` se broadcast karta hai, jo sirf usi instance ke logon tak pahunchta hai. 300 log bant jayenge aur message sabko nahi milega. Isko theek karne ke liye Redis aur socket.io ka redis adapter chahiye.
+
+Render pe backend ek hi lambi chalne wali process hoti hai, toh Socket.io bina kisi extra cheez ke chal jaata hai.
 
 ## Step 1: Code GitHub pe daalo
 
 ```bash
-git add meet-platform
-git commit -m "Add TDC Meets platform"
 git push
 ```
+
+Repo: https://github.com/Krish-Patwa01/tdc-meets
 
 ## Step 2: Backend, Render pe
 
@@ -20,7 +25,7 @@ git push
 
 | Field | Value |
 |---|---|
-| Root Directory | `meet-platform/backend` |
+| Root Directory | `backend` |
 | Build Command | `npm install` |
 | Start Command | `npm start` |
 | Instance Type | Free |
@@ -46,7 +51,7 @@ FRONTEND_URL=https://meet.thedarknetcommunity.com
 | Field | Value |
 |---|---|
 | Framework Preset | Create React App |
-| Root Directory | `meet-platform/frontend` |
+| Root Directory | `frontend` |
 
 4. Environment variable:
 
