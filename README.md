@@ -1,57 +1,51 @@
 # TDC Meets
 
-Meeting platform for The DarkNet Community. No attendee limit, no Google Meet 100-person cap.
+Meeting platform for The DarkNet Community workshops, built because Google Meet caps a room at 100 participants.
+
+Live at https://tdc-meets.vercel.app
 
 ## Run locally
 
 Backend:
 ```bash
-cd meet-platform/backend && npm install && npm run dev
+cd backend && npm install && cp .env.example .env && npm run dev
 ```
 
-Frontend (separate terminal):
+Fill in `.env` before starting. Frontend, in a separate terminal:
 ```bash
-cd meet-platform/frontend && npm install && npm start
+cd frontend && npm install && npm start
 ```
 
-Open http://localhost:3000
-
-Admin panel: http://localhost:3000/login
+Open http://localhost:3000, admin panel at http://localhost:3000/login
 
 ## How it works
 
-- **Storage**: JSON files in `backend/data/`. No database server needed.
-- **Video**: Jitsi Meet embedded via its public instance, so bandwidth costs nothing.
-- **Realtime**: Socket.io for chat and raise-hand.
+- **Storage**: Supabase when `SUPABASE_URL` and `SUPABASE_SERVICE_KEY` are set, otherwise JSON files under `backend/data/`. Run `backend/schema.sql` once in the Supabase SQL editor.
+- **Video**: Jitsi Meet embedded from a public instance, so bandwidth costs nothing.
+- **Realtime**: Socket.io for chat, raised hands and the attendee list.
 
 ## Flow
 
-1. Admin logs in and creates a meeting with an unlock time.
-2. Admin copies the link, shape `https://yourdomain.com/ROOMID`, and shares it.
-3. Attendees open the link, type a name, and join. No account needed.
-4. Before unlock time the link shows "Please wait, [workshop] will start at [time]".
-5. Admin clicks End, and the link then shows "[workshop] has ended".
+1. Admin logs in and creates a meeting with a link unlock time.
+2. Admin shares the link, shaped `https://tdc-meets.vercel.app/ROOMID`.
+3. Attendees open it, type a name, and join. No account needed.
+4. Before the unlock time the link reads "Please wait, [workshop] will start at [time]".
+5. Admin clicks End, and the link then reads "[workshop] has ended".
+
+## Starting the video
+
+meet.jit.si requires the first participant in a room to sign in as moderator. So before each workshop the host clicks **Start Room** on the meeting card, signs in there once, and comes back. Everyone else joins through this app with no account.
+
+Until that happens, attendees see a "Waiting for the host" screen rather than Jitsi's own notice. It clears by itself once the room opens.
+
+This step disappears if the community ever runs its own Jitsi server, see [deploy/SELF_HOSTING.md](deploy/SELF_HOSTING.md).
 
 ## Config
 
-`backend/.env`:
+Backend reads `backend/.env`, see [.env.example](backend/.env.example) for the full list. The admin account is created on the first successful login with `ADMIN_EMAIL` and `ADMIN_PASSWORD`.
 
-```
-JWT_SECRET=change_this_in_production
-ADMIN_EMAIL=krish@thedarknetcommunity.com
-ADMIN_PASSWORD=Krushial@01
-PORT=5000
-FRONTEND_URL=http://localhost:3000
-```
-
-The admin account is created on first successful login with these credentials.
-
-Frontend reads `REACT_APP_API_URL` to find the backend. Defaults to `http://localhost:5000`.
+Frontend reads `REACT_APP_API_URL` to find the backend, defaulting to `http://localhost:5000`, and `REACT_APP_JITSI_DOMAIN` to pick the Jitsi instance.
 
 ## Deploy
 
-- Frontend to Vercel, root directory `meet-platform/frontend`, env `REACT_APP_API_URL` pointing at the backend URL.
-- Backend to Railway or Render, root `meet-platform/backend`, env vars as above plus `FRONTEND_URL`.
-- Point `meet.thedarknetcommunity.com` at the Vercel deployment.
-
-Note: `backend/data/` is ephemeral on Railway and Render free tiers. Attach a persistent volume, or move to a hosted database, if meeting history must survive restarts.
+See [deploy/VERCEL.md](deploy/VERCEL.md). Frontend goes to Vercel with root directory `frontend`, backend to Render with root directory `backend`.
