@@ -188,7 +188,6 @@ export default function AdminDashboard() {
                           href={jitsiDirectUrl(meeting.roomId)}
                           target="_blank"
                           rel="noreferrer"
-                          style={{ textDecoration: 'none' }}
                           title="Sign in there once so the room opens for everyone"
                         >
                           Start Room

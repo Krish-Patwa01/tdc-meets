@@ -147,7 +147,7 @@ export default function JoinMeeting() {
         <div className="panel-note">
           <h4>Are you the host?</h4>
           <p>Create and manage meetings from the admin panel</p>
-          <a href="/login" className="btn-secondary" style={{ display: 'inline-block', textDecoration: 'none' }}>
+          <a href="/login" className="btn-secondary">
             Go to Admin Panel
           </a>
         </div>

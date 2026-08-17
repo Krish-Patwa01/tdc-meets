@@ -158,7 +158,7 @@ export default function MeetingRoom() {
                 href={jitsiDirectUrl(roomId)}
                 target="_blank"
                 rel="noreferrer"
-                style={{ display: 'inline-block', textDecoration: 'none', marginTop: '16px' }}
+                style={{ marginTop: '16px' }}
               >
                 Open room to start
               </a>
