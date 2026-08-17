@@ -278,6 +278,20 @@ button,
   line-height: 1.6;
 }
 
+.video-cover-skip {
+  margin-top: 24px;
+  background: none;
+  color: #9aa5ab;
+  font-size: 13px;
+  font-weight: 400;
+  text-decoration: underline;
+  padding: 8px;
+}
+
+.video-cover-skip:hover {
+  color: #fff;
+}
+
 .sidebar {
   background-color: var(--bg-secondary);
   border-radius: 12px;

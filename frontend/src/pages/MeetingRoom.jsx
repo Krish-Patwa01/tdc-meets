@@ -13,6 +13,7 @@ export default function MeetingRoom() {
   const [currentMessage, setCurrentMessage] = useState('');
   const [hands, setHands] = useState([]);
   const [videoJoined, setVideoJoined] = useState(false);
+  const [coverDismissed, setCoverDismissed] = useState(false);
   const socketRef = useRef(null);
   const jitsiContainer = useRef(null);
   const apiRef = useRef(null);
@@ -142,7 +143,7 @@ export default function MeetingRoom() {
     <div className="meeting-container">
       <div className="video-section">
         <div ref={jitsiContainer} style={{ width: '100%', height: '100%' }} />
-        {!videoJoined && (
+        {!videoJoined && !coverDismissed && (
           <div className="video-cover">
             <div className="video-cover-title">
               {isHost ? 'Start the session' : 'Waiting for the host'}
@@ -163,6 +164,12 @@ export default function MeetingRoom() {
                 Open room to start
               </a>
             )}
+            {/* The call underneath sometimes needs a tap, for camera permission
+                or to confirm joining, which this panel would otherwise swallow.
+                Never trap anyone behind it. */}
+            <button className="video-cover-skip" onClick={() => setCoverDismissed(true)}>
+              Show the meeting screen
+            </button>
           </div>
         )}
       </div>
